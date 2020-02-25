@@ -1,0 +1,2 @@
+class Pusher < ApplicationRecord
+end

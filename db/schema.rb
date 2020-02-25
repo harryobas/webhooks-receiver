@@ -1,0 +1,94 @@
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you'll amass, the slower it'll run and the greater likelihood for issues).
+#
+# It's strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema.define(version: 2020_02_25_131141) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "authors", force: :cascade do |t|
+    t.integer "auth_id"
+    t.string "name"
+    t.string "email"
+    t.string "authorable_type"
+    t.bigint "authorable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["authorable_type", "authorable_id"], name: "index_authors_on_authorable_type_and_authorable_id"
+  end
+
+  create_table "commits", force: :cascade do |t|
+    t.string "sha"
+    t.string "tickets"
+    t.datetime "date"
+    t.bigint "author_id"
+    t.string "commitable_type"
+    t.bigint "commitable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_commits_on_author_id"
+    t.index ["commitable_type", "commitable_id"], name: "index_commits_on_commitable_type_and_commitable_id"
+  end
+
+  create_table "pushers", force: :cascade do |t|
+    t.integer "pusher_id"
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "pushes", force: :cascade do |t|
+    t.bigint "commits_id"
+    t.bigint "repository_id"
+    t.datetime "pushed_at"
+    t.bigint "pusher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commits_id"], name: "index_pushes_on_commits_id"
+    t.index ["pusher_id"], name: "index_pushes_on_pusher_id"
+    t.index ["repository_id"], name: "index_pushes_on_repository_id"
+  end
+
+  create_table "releases", force: :cascade do |t|
+    t.string "action"
+    t.datetime "released_at"
+    t.integer "release_id"
+    t.string "tag_name"
+    t.bigint "author_id"
+    t.bigint "commits_id"
+    t.bigint "repository_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_releases_on_author_id"
+    t.index ["commits_id"], name: "index_releases_on_commits_id"
+    t.index ["repository_id"], name: "index_releases_on_repository_id"
+  end
+
+  create_table "repositories", force: :cascade do |t|
+    t.integer "repo_id"
+    t.string "name"
+    t.string "repositable_type"
+    t.bigint "repositable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["repositable_type", "repositable_id"], name: "index_repositories_on_repositable_type_and_repositable_id"
+  end
+
+  add_foreign_key "commits", "authors"
+  add_foreign_key "pushes", "commits", column: "commits_id"
+  add_foreign_key "pushes", "pushers"
+  add_foreign_key "pushes", "repositories"
+  add_foreign_key "releases", "authors"
+  add_foreign_key "releases", "commits", column: "commits_id"
+  add_foreign_key "releases", "repositories"
+end
