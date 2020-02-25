@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_HOST: database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pa$$word
+      POSTGRES_DB: webhooks_receiver_dev
+    volumes:
+      - .:/usr/src/app
+
+  database:
+      image: postgres
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: pa$$word
+        POSTGRES_DB: webhooks_receiver_dev
+      volumes:
+        - db-data:/data/db
+
+
+volumes:
+  db-data:
