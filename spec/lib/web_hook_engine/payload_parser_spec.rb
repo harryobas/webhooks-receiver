@@ -6,15 +6,19 @@ RSpec.describe WebHookEngine::PayloadParser do
 
   describe ".parse_payload" do
     context "with push payload" do
-      it "creates a push model" do
-        Push.expects(:new)
-        WebHookEngine::PayloadParser.parse_payload(push_payload)
-      end
+
       it "returns a push model" do
         parsed_payload = WebHookEngine::PayloadParser.parse_payload(push_payload)
         expect(parsed_payload).to be_a Push
       end
     end
-    
+    context "with release payload" do
+
+      it "returns a release model" do
+        parsed_payload = WebHookEngine::PayloadParser.parse_payload(release_payload)
+        expect(parsed_payload).to be_a Release
+      end
+    end
+
   end
 end
