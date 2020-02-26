@@ -22,7 +22,7 @@ RSpec.describe WebHookEngine::Repo do
     context "with parsed release payload" do
       it "inserts a new release record into the database" do
         expect(WebHookEngine::Repo.persist(parsed_release_payload)).to eq true
-        expect(Release.all.size).to be > 0  
+        expect(Release.all.size).to be > 0
       end
     end
   end
