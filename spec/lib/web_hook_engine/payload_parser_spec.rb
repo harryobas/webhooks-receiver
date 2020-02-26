@@ -18,7 +18,7 @@ RSpec.describe WebHookEngine::PayloadParser do
         expect(parsed_payload).to be_a Release
       end
     end
-    context "with pull reqiest payload" do
+    context "with pull request payload" do
       it "returns a pull request model" do
         parsed_payload = WebHookEngine::PayloadParser.parse_payload(pull_payload)
         expect(parsed_payload).to be_a Pull
