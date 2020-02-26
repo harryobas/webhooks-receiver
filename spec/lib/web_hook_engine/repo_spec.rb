@@ -12,6 +12,11 @@ RSpec.describe WebHookEngine::Repo do
     WebHookEngine::PayloadParser.parse_payload(release_payload)
   end
 
+  let(:parsed_pull_payload) do
+    pull_request = JSON.parse(File.read("#{Rails.root}/spec/fixtures/pull_request_payload.json"))
+    WebHookEngine::PayloadParser.parse_payload(pull_request)
+  end
+
   describe ".persist" do
     context "with parsed push payload" do
       it "inserts a new push record into the database" do
@@ -25,6 +30,13 @@ RSpec.describe WebHookEngine::Repo do
         expect(Release.all.size).to be > 0
       end
     end
+    context "with parsed pull request payload" do
+      it "inserts a new pull record into the database" do
+        expect(WebHookEngine::Repo.persist(parsed_pull_payload)).to eq true
+        expect(Pull.all.size).to be > 0
+      end
+    end
+
   end
 
 end
