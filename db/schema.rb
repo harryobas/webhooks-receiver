@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_25_131141) do
+ActiveRecord::Schema.define(version: 2020_02_25_225131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,40 @@ ActiveRecord::Schema.define(version: 2020_02_25_131141) do
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_commits_on_author_id"
     t.index ["commitable_type", "commitable_id"], name: "index_commits_on_commitable_type_and_commitable_id"
+  end
+
+  create_table "heads", force: :cascade do |t|
+    t.string "sha"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "pull_requests", force: :cascade do |t|
+    t.integer "request_id"
+    t.integer "number"
+    t.string "state"
+    t.string "title"
+    t.bigint "user_id"
+    t.string "body"
+    t.datetime "closed_at"
+    t.string "merge_commit_sha"
+    t.bigint "head_id"
+    t.integer "commits"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["head_id"], name: "index_pull_requests_on_head_id"
+    t.index ["user_id"], name: "index_pull_requests_on_user_id"
+  end
+
+  create_table "pulls", force: :cascade do |t|
+    t.string "action"
+    t.integer "number"
+    t.bigint "pull_request_id"
+    t.bigint "repository_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pull_request_id"], name: "index_pulls_on_pull_request_id"
+    t.index ["repository_id"], name: "index_pulls_on_repository_id"
   end
 
   create_table "pushers", force: :cascade do |t|
@@ -84,7 +118,19 @@ ActiveRecord::Schema.define(version: 2020_02_25_131141) do
     t.index ["repositable_type", "repositable_id"], name: "index_repositories_on_repositable_type_and_repositable_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.integer "usr_id"
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "commits", "authors"
+  add_foreign_key "pull_requests", "heads"
+  add_foreign_key "pull_requests", "users"
+  add_foreign_key "pulls", "pull_requests"
+  add_foreign_key "pulls", "repositories"
   add_foreign_key "pushes", "commits", column: "commits_id"
   add_foreign_key "pushes", "pushers"
   add_foreign_key "pushes", "repositories"

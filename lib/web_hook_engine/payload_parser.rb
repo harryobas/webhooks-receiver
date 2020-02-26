@@ -4,6 +4,8 @@ class WebHookEngine::PayloadParser
     def parse_payload(payload)
       if payload.key?('action') && payload['action'] == 'released'
         parse_release_payload(payload)
+      elsif payload.key?('action') && payload['action'] == 'closed'|| payload['action'] == 'approved'|| payload['action'] == 'created'
+        parse_pull_request_payload(payload)
       else
         parse_push_payload(payload)
       end
@@ -46,6 +48,29 @@ class WebHookEngine::PayloadParser
       release.author = Author.new({auth_id: payload['release']['author']['id'],
         name: payload['release']['author']['name'], email: payload['release']['author']['email']})
       release
+    end
+
+    def parse_pull_request_payload(payload)
+      usr = User.new(usr_id: payload.dig('pull_request', 'user', 'id'), name: payload.dig('pull_request', 'user', 'name'),
+      email: payload.dig('pull_request', 'user', 'email'))
+
+      repo = Repository.new(repo_id: payload.dig('repository', 'id'), name: payload.dig('repository', 'name'))
+      hd = Head.new(sha: payload.dig('pull_request', 'head', 'sha'))
+
+      pull_req = PullRequest.new(request_id: payload.dig('pull_request', 'id'), number: payload.dig('pull_request', 'number'),
+      state: payload.dig('pull_request', 'state'), title: payload.dig('pull_request', 'title'),
+      commits: payload.dig('pull_request', 'commits'), user: usr, head: hd, body: payload.dig('pull_request', 'body'),
+      created_at: DateTime.parse(payload['pull_request']['created_at']),
+      updated_at: DateTime.parse(payload['pull_request']['updated_at']),
+      closed_at: DateTime.parse(payload['pull_request']['closed_at']),
+      merge_commit_sha: payload.dig('pull_request', 'merge_commit_sha'))
+
+      pull = Pull.new
+      pull.action = payload['action']
+      pull.number = payload['number']
+      pull.pull_request = pull_req
+      pull.repository = repo
+      pull
     end
 
     def extract_tickets(message)
