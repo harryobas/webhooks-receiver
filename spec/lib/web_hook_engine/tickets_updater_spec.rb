@@ -12,32 +12,6 @@ RSpec.describe WebHookEngine::TicketsUpdater do
     WebHookEngine::PayloadParser.parse_payload(release_payload)
   end
 
-  let(:url){"https://webhook.site/2a661dda-fa74-4378-986d-463a2c20f630"}
-
-  let(:update_payload_push) do
-    {
-      query: "state ready for release",
-      issues: [
-        {
-          id: "sp-131"
-        }
-      ],
-      comment: "see SHA f66997d4630d353901a64f39df5f92d22e4bc634"
-    }
-  end
-
-  let(:update_payload_release) do
-    {
-      query: "state released",
-      issues: [
-        {
-          id: "happ-1224"
-        }
-      ],
-      comment: "released in 1.0.1"
-    }
-  end
-
   describe ".send_issue_updates" do
     context "with parsed push payload" do
       it "sends push commit updates" do

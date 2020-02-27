@@ -5,8 +5,8 @@ class WebHookEngine::TicketsUpdater
       if parsed_payload.class == Push
         send_push_commit_updates(parsed_payload)
       else
-        send_release_commit_updates(parsed_payload)
-      end 
+        send_release_commit_updates(parsed_payload) if parsed_payload.class == Release
+      end
     end
 
     private
@@ -32,7 +32,8 @@ class WebHookEngine::TicketsUpdater
     end
 
     def send_payload(update_payload)
-      RestClient::Request.execute(method: :get, url: URL, payload: update_payload.to_json)
+      RestClient::Request.execute(method: :post, url: URL,
+        payload: update_payload.to_json, headers: {content_type: :json})
     end
 
     def extract_issues(tickets)
