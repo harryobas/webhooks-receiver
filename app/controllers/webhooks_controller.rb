@@ -3,6 +3,7 @@ class WebhooksController < ApplicationController
 
   def receive
     parsed_payload = WebHookEngine::PayloadParser.parse_payload(@payload)
+    WebHookEngine::Repo.persist(parsed_payload)
     render nothing: true
   end
 
