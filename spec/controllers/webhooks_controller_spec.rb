@@ -15,7 +15,6 @@ RSpec.describe WebhooksController, type: :controller do
       end
       it "calls repo" do
         request.env['RAW_POST_DATA'] = File.read(json_file)
-        #parsed_payload = WebHookEngine::PayloadParser.parse_payload(data)
         WebHookEngine::Repo.expects(:persist).returns(true)
         subject
       end
