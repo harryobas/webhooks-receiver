@@ -1,20 +1,18 @@
 class WebhooksController < ApplicationController
-  before_action :set_payload
 
   def receive
-    parsed_payload = WebHookEngine::PayloadParser.parse_payload(@payload)
-    WebHookEngine::Repo.persist(parsed_payload)
+    if request.headers['Content-Type'] == 'application/json'
+      data = params[:webhook].as_json
+    else
+      data = params.as_json
+    end
+    @parsed_payload = WebHookEngine::PayloadParser.parse_payload(data)
+    if @parsed_payload
+      WebHookEngine::Repo.persist(@parsed_payload)
+      WebHookEngine::TicketsUpdater.send_issue_updates(@parsed_payload)
+    end
     render nothing: true
   end
 
-  private
-
-  def set_payload
-    if request.headers['Content-Type'] == 'application/json'
-      @payload = params[:webhook]
-    else
-      @payload = params.as_json
-    end
-  end
 
 end
