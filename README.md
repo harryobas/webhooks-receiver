@@ -1,4 +1,4 @@
-#Introduction
+# Introduction
 
 An API-only app that provides a single endpoint for processing webhook requests to enable the integration of a git hosting cloud service with a ticket tracking cloud service. More specifically, the app provides the following:
 
@@ -7,7 +7,7 @@ An API-only app that provides a single endpoint for processing webhook requests 
 3. Stores them to a DB
 4. POSTs issue updates to a ticket tracking app
 
-#Installation
+# Installation
 
 This app is dockerized  to enable both ease of installation and execution on either Linux, mac or windows. To install/run on Linux, make sure to have both docker and docker-compose installed on your machine and follow the instructions below:
 
@@ -16,6 +16,6 @@ This app is dockerized  to enable both ease of installation and execution on eit
 3. $ sudo docker-compose build
 4. $ sudo docker-compose up -d
 
-#Endpoint
+# Endpoint
 
 This app accepts http post request on localhost:3000/hooks  
