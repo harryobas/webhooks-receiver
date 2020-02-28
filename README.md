@@ -1,24 +1,21 @@
-# README
+#Introduction
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+An API-only app that provides a single endpoint for processing webhook requests to enable the integration of a git hosting cloud service with a ticket tracking cloud service. More specifically, the app provides the following:
 
-Things you may want to cover:
+1. Receives incoming webhooks
+2. Parses the incoming webhooks data
+3. Stores them to a DB
+4. POSTs issue updates to a ticket tracking app
 
-* Ruby version
+#Installation
 
-* System dependencies
+This app is dockerized  to enable both ease of installation and execution on either Linux, mac or windows. To install/run on Linux, make sure to have both docker and docker-compose installed on your machine and follow the instructions below:
 
-* Configuration
+1. $ git clone https://github.com/harryobas/webhooks-receiver.git
+2. $ cd webhooks-receiver
+3. $ sudo docker-compose build
+4. $ sudo docker-compose up -d
 
-* Database creation
+#Endpoint
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+This app accepts http post request on localhost:3000/hooks  
