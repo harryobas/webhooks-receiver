@@ -12,23 +12,23 @@ class WebHookEngine::TicketsUpdater
     private
 
     def send_push_commit_updates(payload)
-      update_payload = {}
       payload.commits.each do |c|
+        update_payload = {}
         update_payload[:query] = "state ready for release"
         update_payload[:issues] = extract_issues(c.tickets)
         update_payload[:comments] = "see SHA ##{c.sha}"
+        send_payload(update_payload)
       end
-      send_payload(update_payload)
     end
 
     def send_release_commit_updates(payload)
-      update_payload = {}
       payload.commits.each do |c|
+        update_payload = {}
         update_payload[:query] = "state #{payload.action}"
         update_payload[:issues] = extract_issues(c.tickets)
         update_payload[:comments] = "Released in #{payload.tag_name}"
+        send_payload(update_payload)
       end
-      send_payload(update_payload)
     end
 
     def send_payload(update_payload)

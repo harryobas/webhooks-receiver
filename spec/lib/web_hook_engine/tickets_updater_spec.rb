@@ -15,14 +15,14 @@ RSpec.describe WebHookEngine::TicketsUpdater do
   describe ".send_issue_updates" do
     context "with parsed push payload" do
       it "sends push commit updates" do
-        res = WebHookEngine::TicketsUpdater.send_issue_updates(parsed_push_payload)
-        expect(res.code).to eq 200
+        RestClient::Request.expects(:execute)
+        WebHookEngine::TicketsUpdater.send_issue_updates(parsed_push_payload)
       end
     end
     context "with parsed release payload" do
       it "sends release commit updates" do
-        res = WebHookEngine::TicketsUpdater.send_issue_updates(parsed_release_payload)
-        expect(res.code).to eq 200
+        RestClient::Request.expects(:execute)
+        WebHookEngine::TicketsUpdater.send_issue_updates(parsed_release_payload)
       end
     end
   end
